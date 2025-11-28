@@ -1,15 +1,34 @@
-import React from "react";
-import { Text, View } from "react-native";
+import AmortizationPlan from "@/components/componentesExamen/2AmortizationPlan";
+import LoanForm from "@/components/componentesExamen/LoanForm";
+import { useLoanCalculator } from "@/hooks/useLoanCalculator";
+import React, { useState } from "react";
+import { View } from "react-native";
 import "../global.css";
 
-const index = () => {
+export default function App() {
+  const { plan, monthlyPayment, calculate } = useLoanCalculator();
+
+  
+  const [clientName, setClientName] = useState("");
+
+  const handleCalculate = (data: any) => {
+    setClientName(data.clientName); // recibir el nombre del LoanForm
+    calculate(data);                // ejecutar cálculos del hook
+  };
+
   return (
-    <View className="flex-1 items-center justify-center bg-white">
-      <Text className="text-xl font-bold text-blue-500">
-        Welcome to Nativewind!
-      </Text>
+    <View>
+      <LoanForm onCalculate={handleCalculate} />
+
+      {plan.length > 0 && (
+        <AmortizationPlan
+          plan={plan}
+          monthlyPayment={monthlyPayment}
+          clientName={clientName} 
+        />
+      )}
     </View>
   );
-};
+}
 
-export default index;
+
